@@ -265,13 +265,12 @@ int main(int argc, char **argv) {
         int streamLen;
         uint32_t streamLenLE, dataLenLE;
         union color c = { .rgbw = { .w = 0, .r = 0, .g = 0xBB, .b = 0xFF } };
-        char  colorAsStr[9] = {0};
         struct digit digits[16];
         /* Thread about detecting server leaving */
         pthread_t svrLeavingThread;
         int *threadRc;
         /* Others */
-        int i, rc, state = 0;
+        int rc, state = 0;
 
         if (argc != 3) {
                 fprintf(stderr, "usage: %s <SERVER_IP> <PORT>\n", argv[0]);
@@ -362,18 +361,10 @@ int main(int argc, char **argv) {
         while (running) {
                 snprintf(buff, BUFFER_LEN, "!C%dN%04x,", 3, 7);
                 buff[9] = 0;
-                /* Concatenate data as hexa string */
-                for (i = 0; i < 7; i++) {
-                        colorAsStr[sizeof(colorAsStr)-1] = 0;
-                        snprintf(colorAsStr, sizeof(colorAsStr), "%08x",
-                                 __cpu_to_le32p((uint32_t *)
-                                        &digits[state].segments[i].word));
-                        strncat(buff, colorAsStr, sizeof(colorAsStr));
-                }
-                strncat(buff, "$", 1);
 
-                streamLen = strlen(buff);
-                DBG("CLT-DBG: Built string(len[%d]): %s\n", streamLen, buff);
+                streamLen = strlen(buff) +
+                            7*sizeof(digits[state].segments->word) + 1;
+                DBG("CLT-DBG: Built string(len[%d])\n", streamLen);
 
                 streamLenLE = __cpu_to_le32p((uint32_t *)&streamLen);
                 if (send(socketFd, &streamLenLE,
@@ -384,6 +375,28 @@ int main(int argc, char **argv) {
                 if (send(socketFd, (void *) buff,
                          strlen(buff), 0) != strlen(buff))
                         printf("CLT: Data's header could not "
+                               "be sent properly\n");
+
+                /* Works because host machine operates with Little Endian  */
+                /* TODO/IDEA: Only change endianess treatment Qt side
+                 *            Otherwise, a loop would be needed to
+                 *            transform and ensure data's endianess, like: */
+                /*for (uint32_t i = 0; i < 7; i++) {
+                        uint32_t tmp = __cpu_to_le32p(
+                                        &(digits[state].segments+i)->word);
+                        if (send(socketFd, (void *) &tmp, sizeof(tmp), 0)
+                            != sizeof(tmp))
+                                printf("CLT: Data[state=%d] segment[%d] could "
+                                       "not be sent properly\n", state, i);
+                }*/
+                if (send(socketFd, (void *) digits[state].segments,
+                          7*sizeof(digits[state].segments->word), 0)
+                          != 7*sizeof(digits[state].segments->word))
+                        printf("CLT: Data[state=%d] could not "
+                               "be sent properly\n", state);
+
+                if (send(socketFd, (void *) "$", 1, 0) != 1)
+                        printf("CLT: Data's terminating char could not "
                                "be sent properly\n");
 
                 state = (state + 1) % 16;
