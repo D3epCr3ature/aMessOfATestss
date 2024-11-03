@@ -1,6 +1,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
+#include <QCheckBox>
 #include <QComboBox>
 #include <QDialog>
 #include <QGridLayout>
@@ -31,17 +32,18 @@ private:
     QGridLayout *mainLayout = nullptr;
 
     QComboBox *ipComboBox  = nullptr;
-    QLabel *ipLbl   = nullptr;
+    QLabel    *ipLbl   = nullptr;
     QLineEdit *portLinEdit = nullptr;
-    QLabel *portLbl = nullptr;
+    QLabel    *portLbl = nullptr;
 
     bool serverStatus = false;
-    QTcpServer *tcpServer = nullptr;
+    QTcpServer  *tcpServer = nullptr;
     QDataStream inStream;
-    QTcpSocket *cltConnection = nullptr;
+    QTcpSocket  *cltConnection = nullptr;
 
     QPushButton *toggleSvrStatusBtn = nullptr;
 
     SegmentsDisplay display;
+    QCheckBox *xRayCheckBox = nullptr;
 };
 #endif // DIALOG_H

@@ -33,6 +33,12 @@ Dialog::Dialog(QWidget *parent) : QDialog(parent) {
     display.setSegmentColor(5, QColor(10,10,10));
     display.setSegmentColor(6, QColor(10,10,10));
 
+    xRayCheckBox = new QCheckBox("X-Ray display");
+    connect(xRayCheckBox, &QCheckBox::stateChanged, this,
+            [=](int checked) {
+                display.toggleXRay();
+            });
+
     ipLbl = new QLabel("IP   :");
     ipLbl->setFont({ "Source Code Pro" });
     ipComboBox = new QComboBox;
@@ -61,8 +67,9 @@ Dialog::Dialog(QWidget *parent) : QDialog(parent) {
     mainLayout->addWidget(portLinEdit, 1, 1);
     mainLayout->addWidget(toggleSvrStatusBtn, 2, 0, 1, 2);
     mainLayout->addWidget(&display, 3, 0, 1, 2);
+    mainLayout->addWidget(xRayCheckBox, 4, 0, 1, 2);
 
-    resize(220, 505);
+    resize(220, 533);
 }
 
 /** **************************************************************************
@@ -75,6 +82,7 @@ Dialog::~Dialog() {
     delete(portLinEdit);
     delete(toggleSvrStatusBtn);
     delete(tcpServer);
+    delete(xRayCheckBox);
     delete(mainLayout);
 }
 
@@ -92,19 +100,18 @@ void Dialog::readCltRequest(void) {
     /* REGEX part: ^\!
      *             C[3-4]
      *             N(([A-F]|[a-f]|[0-9]){4}),
-     *             (([A-F]|[a-f]|[0-9]){8})+
+     *             .{4})+
      *             \$$
-     * Accept data, like:  1data  - !C3N0001,00123456$
-                          10datas - !C3N000A,00112233...AABBCCDD$ */
+     * Accept data, like:  1data  - !C3N0001,<uint32_val>$
+                          10datas - !C3N000A,<uint32_val1>...<uint32_valN>$ */
     static QRegularExpression re("^\\!C[3-4]N(([A-F]|[a-f]|[0-9]){4}),"
-                                 "(([A-F]|[a-f]|[0-9]){8})+\\$$");
+                                 "(.{4})+\\$$");
     if (re.match(streamAsBytes).hasMatch()) {
         /* Remove starting "!C" & terminating '$' sequences */
         streamAsBytes.remove(0, 2);
         streamAsBytes.removeLast();
 
         uint16_t n;
-        uint32_t tmp;
         uint8_t  comp;
         uint8_t  r, g, b, w;
 
@@ -126,30 +133,21 @@ void Dialog::readCltRequest(void) {
 
         if (comp == 3) {
             for (uint16_t i = 0; i < n; i++) {
-                /* ISSUE: Below not working?!?!
-                 * Hypothesis: Not isolated on last value,
-                 *             so doesn't work with suffix */
-                //tmp = streamAsBytes.toUInt(&okDbg, NUMERICAL_BASE_16);
-                tmp = streamAsBytes.first(HEXA_32BITS_NDIGITS)
-                                    .toUInt(&okDbg, NUMERICAL_BASE_16);
-                streamAsBytes.remove(0, HEXA_32BITS_NDIGITS);
-
-                r = (tmp & 0x000000FF);
-                g = (tmp & 0x0000FF00) >>  8;
-                b = (tmp & 0x00FF0000) >> 16;
+                r = streamAsBytes.at(0);
+                g = streamAsBytes.at(1);
+                b = streamAsBytes.at(2);
                 display.setSegmentColor(i, QColor(r, g, b));
+
+                streamAsBytes.remove(0, sizeof(uint32_t));
             }
         } else if (comp == 4) {
             /* Treat 4 components as one WHITE channel
              * and, for now, set all channels to this value */
             for (uint32_t i = 0; i < n; i++) {
-                //tmp = streamAsBytes.toUInt(&okDbg, NUMERICAL_BASE_16);
-                tmp = streamAsBytes.first(HEXA_32BITS_NDIGITS)
-                                    .toUInt(&okDbg, NUMERICAL_BASE_16);
-                streamAsBytes.remove(0, 8);
-
-                w = (tmp & 0xFF000000) >> 24;
+                w = streamAsBytes.at(3);
                 display.setSegmentColor(i, QColor(w, w, w));
+
+                streamAsBytes.remove(0, sizeof(uint32_t));
             }
         } else  return; /* Do nothing and end function */
 

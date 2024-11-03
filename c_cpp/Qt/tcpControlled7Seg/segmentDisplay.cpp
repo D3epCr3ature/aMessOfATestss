@@ -13,9 +13,11 @@
  */
 #include "segmentDisplay.h"
 
+#include <QDebug>
 #include <QColor>
 #include <QPainter>
 #include <QPainterPath>
+#include <QStaticText>
 #include <QWidget>
 
 SegmentsDisplay::SegmentsDisplay(QWidget* pQParent) :
@@ -115,6 +117,10 @@ SegmentsDisplay::SegmentsDisplay(QWidget* pQParent) :
     segsColor.append(QColor("cyan"  ));
     segsColor.append(QColor("blue"  ));
     segsColor.append(QColor("purple"));
+
+    for (auto i = 0; i < segsColor.size(); i++)
+        qDebug() << "Path[" << i << "]: {" << paths[i].currentPosition().x()
+                 <<"," << paths[i].currentPosition().y() << "}\n";
 }
 
 int SegmentsDisplay::getNSegments(void) {
@@ -133,12 +139,41 @@ void SegmentsDisplay::setPainterScaleY(qreal _scaleY) {
     scaleY = _scaleY;
 }
 
+void SegmentsDisplay::toggleXRay(void) {
+    xRayOn = !xRayOn;
+    update();
+}
+
 void SegmentsDisplay::paintEvent(QPaintEvent* pQEvent) {
     QPainter painter(this);
-    painter.setPen(Qt::NoPen);
     painter.scale(scaleX, scaleY);
-    for (int i = 0; i < paths.size(); i++)
-        painter.fillPath(paths[i], QBrush(segsColor[i]));
+    if (xRayOn) {
+        QStaticText text;
+        QFont txtFont("Arial", 20, QFont::Bold, true);
+
+        painter.setPen(QPen(QBrush(Qt::black), 3));
+        for (int i = 0; i < paths.size(); i++) {
+            painter.fillPath(paths[i], Qt::transparent);
+            painter.drawPath(paths[i]);
+
+            /* Segment numeration */
+            text.setText(QString::number(i));
+            painter.setFont(txtFont);
+            if (i % 3) { /* Vertical segments */
+                painter.drawStaticText(paths[i].currentPosition().x() -  10,
+                                       paths[i].currentPosition().y() + 110,
+                                       text);
+            } else {     /* Horinzontal segments */
+                painter.drawStaticText(paths[i].currentPosition().x() + 120,
+                                       paths[i].currentPosition().y() -  20,
+                                       text);
+            }
+        }
+    } else {
+        painter.setPen(Qt::NoPen);
+        for (int i = 0; i < paths.size(); i++)
+            painter.fillPath(paths[i], QBrush(segsColor[i]));
+    }
 
     // call base class paint event to keep it working
     QWidget::paintEvent(pQEvent);
