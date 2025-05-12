@@ -29,6 +29,8 @@ protected:
     virtual void mousePressEvent(QMouseEvent *event)     override;
     virtual void mouseReleaseEvent(QMouseEvent *event)   override;
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
     //virtual void paintEvent(QPaintEvent *pQEvent) override;
 
 private:

@@ -1,10 +1,12 @@
 #include "dynamicdisplay.h"
 
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 
 //DynamicDisplay::DynamicDisplay() : scene(new DisplayScene(this)) {
 DynamicDisplay::DynamicDisplay() : scene(new QGraphicsScene(this)) {
-    //connect(scene, &QGraphicsScene::mousePressEvent, this, [=](QGraphicsSceneMouseEvent *mouseEvent){});
+    connect(scene, SIGNAL(mousePressEvent), scene, "Test");
+
     scene->setBackgroundBrush(Qt::lightGray);
 }
 
@@ -34,7 +36,7 @@ void DynamicDisplay::setSceneDimensions(qreal x, qreal y, qreal w, qreal h) {
     scene->setSceneRect(x, y, w, h);
 
     this->setScene(scene);
-    this->fitInView(scene->sceneRect());
+    //this->fitInView(scene->sceneRect());
 }
 
 void DynamicDisplay::setLedColor(int idx, QColor color) {
@@ -58,6 +60,7 @@ size_t DynamicDisplay::getNumberOfLeds() {
 }*/
 
 void DynamicDisplay::mousePressEvent(QMouseEvent *event) {
+    /* This work, but cursor's offset is weird ... */
     static QPointF pos;
     if (event->button() == Qt::LeftButton) {
         pos = event->scenePosition();
@@ -72,6 +75,15 @@ void DynamicDisplay::mouseReleaseEvent(QMouseEvent *event) {
     /*if (mouseEvent->button() == Qt::LeftButton) {
         drawLedTo(mouseEvent->scenePos());
     }*/
+}
+
+void DynamicDisplay::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    /* This doesn't work ... */
+    static QPointF pos;
+    if (event->button() == Qt::LeftButton) {
+        pos = event->scenePos();
+        drawLedTo(pos);
+    }
 }
 
 //void DynamicDisplay::paintEvent(QPaintEvent *pQEvent) {
