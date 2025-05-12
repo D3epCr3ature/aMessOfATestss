@@ -22,11 +22,10 @@ public:
     struct LED getLedAtIndex(int i);
     void       setLedAtIndex(int i, unsigned char r, unsigned char g, unsigned char b);
 
-
 protected:
     //void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)    override;
-    void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)   override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+    //void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)   override;
+    //void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
 private:
     //void drawLedTo(const QPointF &pos);

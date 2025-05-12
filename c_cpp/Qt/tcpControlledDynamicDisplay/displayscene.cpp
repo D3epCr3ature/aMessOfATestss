@@ -22,7 +22,7 @@ DisplayScene::~DisplayScene() {
     }
 }*/
 
-void DisplayScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
+/*void DisplayScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     if (mouseEvent->button() == Qt::LeftButton) {
         drawLedTo(mouseEvent->scenePos());
     }
@@ -31,7 +31,7 @@ void DisplayScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 void DisplayScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     /*if (mouseEvent->button() == Qt::LeftButton) {
         drawLedTo(mouseEvent->scenePos());
-    }*/
+    }* /
 }
 
 void DisplayScene::drawLedTo(const QPointF &pos) {
@@ -61,4 +61,4 @@ void DisplayScene::setLedAtIndex(int i, unsigned char r, unsigned char g, unsign
     leds.at(i).color.r = r;
     leds.at(i).color.g = g;
     leds.at(i).color.b = b;
-}
+}*/

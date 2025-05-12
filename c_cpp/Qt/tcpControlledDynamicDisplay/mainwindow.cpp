@@ -29,9 +29,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     sliderBlue->setMaximum(255);
     sliderBlue->setMinimum(0);
 
-    display->setSceneRect(lblLedIdxToModify->pos().x(),
-                          lblLedIdxToModify->pos().y() * 2 + lblLedIdxToModify->height(),
-                          600, 600);
+    display->setSceneDimensions(lblLedIdxToModify->pos().x(),
+                                lblLedIdxToModify->pos().y() * 2 + lblLedIdxToModify->height(),
+                                600, 600);
     display->setMinimumSize(300, 300);
 
     lblTest = new QLabel("TESTING LABEL");
