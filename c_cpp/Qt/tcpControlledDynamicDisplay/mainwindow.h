@@ -1,20 +1,27 @@
 #ifndef __MAIN__WINDOW_H__
 #define __MAIN__WINDOW_H__
 
-#include <QDialog>
+//#include <QDialog>
+#include <QWidget>
 #include <QGridLayout>
 #include <QLabel>
+#include <QPushButton>
+#include <QSlider>
 #include <QSpinBox>
 
 #include "dynamicdisplay.h"
 
-class MainWindow : public QDialog
+//class MainWindow : public QDialog
+class MainWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QDialog *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+protected:
+    virtual void paintEvent(QPaintEvent *pQEvent) override;
 
 private:
     QLabel *lblNbrOfLeds = nullptr;
@@ -22,9 +29,16 @@ private:
     QLabel *lblLedIdxToModify       = nullptr;
     QSpinBox *spinBoxLedIdxToModify = nullptr;
 
+    QPushButton *btnApplyLedModif   = nullptr;
+    QSlider     *sliderRed   = nullptr;
+    QSlider     *sliderGreen = nullptr;
+    QSlider     *sliderBlue  = nullptr;
+
     DynamicDisplay *display = nullptr;
 
     QGridLayout *mainLayout;
+
+    QLabel *lblTest = nullptr;
 };
 
 #endif // __MAIN__WINDOW_H__

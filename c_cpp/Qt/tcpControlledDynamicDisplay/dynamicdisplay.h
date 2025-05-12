@@ -12,6 +12,11 @@ public:
     DynamicDisplay();
     void setSceneRect(qreal x, qreal y, qreal w, qreal h);
 
+    size_t getNumberOfLeds();
+    void setLedColor(int idx, QColor color);
+
+    void updateScene();
+
 protected:
     //virtual void mouseMoveEvent(QMouseEvent *mouseEvent) override;
     //virtual void mousePressEvent(QMouseEvent *event)     override;

@@ -35,7 +35,30 @@ void DisplayScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 }
 
 void DisplayScene::drawLedTo(const QPointF &pos) {
-    qreal radius = 50;
-    qreal halfRadius = radius / 2;
-    this->addEllipse(pos.x()-halfRadius, pos.y()-halfRadius, radius, radius, QPen(Qt::black), Qt::blue);
+    struct LED tmp;
+    tmp.id = leds.size();
+    tmp.radius = 50;
+    qreal halfRadius = tmp.radius / 2;
+    // Save Top-Left position relative to pixel's center
+    tmp.position.x = pos.x()-halfRadius;
+    tmp.position.y = pos.y()-halfRadius;
+
+    tmp.color = {0, 0, 0};
+    leds.push_back(tmp);
+
+    this->addEllipse(tmp.position.x, tmp.position.y, tmp.radius, tmp.radius, QPen(Qt::black), Qt::transparent);
+}
+
+size_t DisplayScene::getNumberOfLeds() {
+    return leds.size();
+}
+
+struct LED DisplayScene::getLedAtIndex(int i) {
+    return leds.at(i);
+}
+
+void DisplayScene::setLedAtIndex(int i, unsigned char r, unsigned char g, unsigned char b) {
+    leds.at(i).color.r = r;
+    leds.at(i).color.g = g;
+    leds.at(i).color.b = b;
 }

@@ -12,6 +12,12 @@ struct LED {
     float pitch;
     std::string type;
 
+    struct {
+        unsigned char  r;
+        unsigned char  g;
+        unsigned char  b;
+    } color;
+
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(LED, id, position,     \
                                    radius, angle, pitch, type)
 };

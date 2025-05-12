@@ -6,13 +6,21 @@
 #include <QObject>
 #include <QPaintEvent>
 
+#include <vector>
+
+#include "structure/led.h"
+
 class DisplayScene : public QGraphicsScene {
 
 public:
     DisplayScene();
     explicit DisplayScene(QObject *parent = nullptr);
     virtual ~DisplayScene();
+
     void drawLedTo(const QPointF &pos);
+    size_t getNumberOfLeds();
+    struct LED getLedAtIndex(int i);
+    void       setLedAtIndex(int i, unsigned char r, unsigned char g, unsigned char b);
 
 
 protected:
@@ -26,6 +34,8 @@ private:
     QPixmap *image;
     QGraphicsPixmapItem *item;
     bool xRayOn;
+
+    std::vector<LED> leds;
 };
 
 #endif // __DISPLAY_SCENE_H__
