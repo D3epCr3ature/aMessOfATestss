@@ -26,7 +26,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         structure/led.h
         structure/position.h
         structure/display.h structure/display.cpp
-        displayscene.h displayscene.cpp
+
         dynamicdisplay.h dynamicdisplay.cpp
     )
 # Define target properties for Android with Qt 6 as:

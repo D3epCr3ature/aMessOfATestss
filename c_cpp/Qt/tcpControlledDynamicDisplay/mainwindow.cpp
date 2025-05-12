@@ -2,8 +2,6 @@
 
 #include <QGraphicsView>
 
-#include "displayscene.h"
-
 //MainWindow::MainWindow(QDialog *parent) : QDialog(parent) {
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     display = new DynamicDisplay;
