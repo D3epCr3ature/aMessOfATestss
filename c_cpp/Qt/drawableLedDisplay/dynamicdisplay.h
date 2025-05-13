@@ -33,6 +33,9 @@ protected:
 
     //virtual void paintEvent(QPaintEvent *pQEvent) override;
 
+    // TODO: Might find a workaround using the friend keyword
+    friend void QGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     QPoint worldRelativePos;
     size_t worldWidth, worldHeight;

@@ -5,7 +5,9 @@
 
 //DynamicDisplay::DynamicDisplay() : scene(new DisplayScene(this)) {
 DynamicDisplay::DynamicDisplay() : scene(new QGraphicsScene(this)) {
-    connect(scene, SIGNAL(mousePressEvent), scene, "Test");
+    connect(scene, &QGraphicsScene::mousePressEvent, this, [=](QGraphicsSceneMouseEvent *event) {
+
+    });
 
     scene->setBackgroundBrush(Qt::lightGray);
 }
