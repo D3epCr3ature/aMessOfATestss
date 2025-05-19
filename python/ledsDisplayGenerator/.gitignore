@@ -1,0 +1,7 @@
+# Display generated file
+# (both suffixes as I'm not sure which one I will continue with)
+*.disp
+*.display
+
+# Python sub-module's cache
+utilities/__pycache__
