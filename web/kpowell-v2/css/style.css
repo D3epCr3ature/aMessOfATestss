@@ -1,0 +1,155 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    font-size: 1.25rem;
+    color: #1B281B;
+    line-height: 1.6;
+}
+
+h1 {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    text-align: center;
+}
+
+h2 {
+    color: #CB721C;
+    font-size: 2.5rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+section {
+    margin-block: 50px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.primary-nav ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.primary-nav a {
+    color: #000;
+    font-weight: bold;
+    text-decoration: none; /* Remove underline */
+}
+
+.primary-nav
+a:hover,
+a:focus-visible {
+    color: #087A98;
+}
+
+img {
+    display: block;
+    max-inline-size: 100%;
+    margin-block-end: 60px;
+}
+
+.two-cols-layout {
+    display: grid;
+    gap: 60px;
+    margin-block-end: 60px;
+
+    /* Can also be outside the class. See below. */
+    /*@media (width > 600px) {
+        grid-template-columns: 1fr 1fr;
+    }*/
+}
+
+/* Can also be integrated inside the class. See above. */
+@media (width > 720px) {
+    h1 {
+        font-size: 7.5rem;
+    }
+
+    .two-cols-layout {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.wrapper {
+    /* Just inline-size will prevent the page to resize
+     * even when going smaller (reducing the page size). */
+    max-inline-size: 1000px;
+    margin-inline: auto;
+}
+
+/* With only the a, even when link clicked, it will still be red */
+a {
+    color: #2B930B;
+}
+
+/* Pseudo-classes *:[visited|hover|...] Give another color when link clicked */
+/*a:visited {
+    color: red;
+}*/
+
+a:hover,
+a:focus-visible {
+    /* *:focus-visible allows to use tab for next element in page */
+    color: rgb(48, 174, 26);
+}
+
+a:active {
+    /* *:active is when the element is clicked.
+     * While maintained, it will be of choosen color until mouse is released */
+    color: black;
+}
+
+/* /!\ WARNING /!\ Order is important. If active set before hover,
+ *                 black never will be displayed as hover primes. 
+ *                 Note: Order is important, last take over previous.*/
+
+.teal-bg {
+    padding: 5px;
+    text-align: center;
+    background-color: #087A98;
+    color: #FFF;
+    border: solid 5px #000;
+}
+
+/* Specificity of a strong element inside a "teal-bg" class */
+/*.teal-bg strong {
+
+}*/
+
+.teal-text {
+    color: #087A98;
+}
+
+/* Changing the marker of a list */
+/*ul li::marker {*/
+/*ul li::marker {
+    content: ">>>";
+}*/
+
+.climber-bg {
+    padding: 24px;
+    /*inline-size: 50rem;*/
+
+    background-image: url("../images/simple-steps.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    color: #FFF;
+    border: solid 5px #000;
+}
+
+footer {
+}
